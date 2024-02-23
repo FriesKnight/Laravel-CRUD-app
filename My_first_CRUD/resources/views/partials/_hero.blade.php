@@ -4,17 +4,17 @@
   
     <div class="z-10">
       <h1 class="text-6xl font-bold uppercase text-white">
-        Lara<span class="text-black">Memes</span>
+        Pin<span class="text-black">-teresting</span>
       </h1>
       <p class="text-2xl text-gray-200 font-bold my-4">
-        Find or post Laravel Memes & Cookies
+        Search for your images or upload!
       </p>
       <div>
         @auth
         @else
         <a href="/register"
-          class="inline-block border-2 border-white text-white py-2 px-4 rounded-xl uppercase mt-2 hover:text-black hover:border-black">Sign
-          Up to post your memes!</a>
+          class="inline-block border-2 border-black text-black py-2 px-4 rounded-xl uppercase mt-2 hover:text-green-900 hover:border-green-900">Sign
+          Up to post and be a p'in-teresting' person!</a>
         @endauth
       </div>
     </div>
