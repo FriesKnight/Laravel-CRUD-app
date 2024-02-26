@@ -2,13 +2,13 @@
     <x-card class="p-10 max-w-lg mx-auto mt-24">
       <header class="text-center">
         <h2 class="text-2xl font-bold uppercase mb-1">Upload your photo</h2>
-        <p class="mb-4">Fill up these details to display your image!</p>
+        <p class="mb-4">Fill up these details to pin your image!</p>
       </header>
   
       <form method="POST" action="/listings" enctype="multipart/form-data">
         @csrf
         <div class="mb-6">
-          <label for="company" class="inline-block text-lg mb-2">Company Name</label>
+          <label for="company" class="inline-block text-lg mb-2">Your Name</label>
           <input type="text" class="border border-gray-200 rounded p-2 w-full" name="company"
             value="{{old('company')}}" />
   
@@ -18,9 +18,9 @@
         </div>
   
         <div class="mb-6">
-          <label for="title" class="inline-block text-lg mb-2">Job Title</label>
+          <label for="title" class="inline-block text-lg mb-2">Image Title</label>
           <input type="text" class="border border-gray-200 rounded p-2 w-full" name="title"
-            placeholder="Example: Senior Laravel Developer" value="{{old('title')}}" />
+            placeholder="Example: Code aesthetic.." value="{{old('title')}}" />
   
           @error('title')
           <p class="text-red-500 text-xs mt-1">{{$message}}</p>
@@ -74,9 +74,9 @@
   
         <div class="mb-6">
           <label for="logo" class="inline-block text-lg mb-2">
-            Company Logo
+            Your Image 
           </label>
-          <input type="file" class="border border-gray-200 rounded p-2 w-full" name="logo" />
+          <input type="file" class="border border-teal-200 rounded p-2 w-full" name="logo" />
   
           @error('logo')
           <p class="text-red-500 text-xs mt-1">{{$message}}</p>

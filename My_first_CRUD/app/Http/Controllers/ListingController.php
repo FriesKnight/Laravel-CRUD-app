@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -11,7 +12,7 @@ class ListingController extends Controller
     // Show all listings
     public function index() {
         return view('listings.index', [
-            'listings' => Listing::latest()->filter(request(['tag', 'search']))->paginate(6)
+            'listings' => Listing::latest()->filter(request(['tag', 'search']))->paginate(4)
         ]);
     }
 
@@ -88,8 +89,8 @@ class ListingController extends Controller
             abort(403, 'Unauthorized Action');
         }
         
-        if($listing->logo && Storage::disk('public')->exists($listing->logo)) {
-            Storage::disk('public')->delete($listing->logo);
+        if($listing->logos && storage::disk('public')->exists($listing->logos)) {
+            storage::disk('public')->delete($listing->logos);
         }
         $listing->delete();
         return redirect('/')->with('message', 'Listing deleted successfully');
