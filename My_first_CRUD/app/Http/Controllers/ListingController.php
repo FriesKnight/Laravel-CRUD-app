@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -57,44 +58,41 @@ class ListingController extends Controller
     }
 
     // Update Listing Data
-    public function update(Request $request, Listing $listing) {
-        // Make sure logged in user is owner
-        if($listing->user_id != auth()->id()) {
-            abort(403, 'Unauthorized Action');
-        }
-        
-        $formFields = $request->validate([
-            'title' => 'required',
-            'company' => ['required'],
-            'location' => 'required',
-            'website' => 'required',
-            'email' => ['required', 'email'],
-            'tags' => 'required',
-            'description' => 'required'
-        ]);
-
-        if($request->hasFile('logo')) {
-            $formFields['logo'] = $request->file('logo')->store('logos', 'public');
-        }
-
-        $listing->update($formFields);
-
+public function update(Request $request, Listing $listing) {
+    // Allow admins to update listings
+    if (auth()->user()->role === 'admin') {
+        // Update the listing
+        $listing->update($request->all());
         return back()->with('message', 'Listing updated successfully!');
     }
 
-    // Delete Listing
-    public function destroy(Listing $listing) {
-        // Make sure logged in user is owner
-        if($listing->user_id != auth()->id()) {
-            abort(403, 'Unauthorized Action');
-        }
-        
-        if($listing->logos && storage::disk('public')->exists($listing->logos)) {
-            storage::disk('public')->delete($listing->logos);
-        }
+    // For regular users, check if they own the listing
+    if ($listing->user_id != auth()->id()) {
+        abort(403, 'Unauthorized Action');
+    }
+
+    // Update the listing
+    $listing->update($request->all());
+    return back()->with('message', 'Listing updated successfully!');
+}
+
+// Delete Listing
+public function destroy(Listing $listing) {
+    // Allow admins to delete listings
+    if (auth()->user()->role === 'admin') {
         $listing->delete();
         return redirect('/')->with('message', 'Listing deleted successfully');
     }
+
+    // Make sure logged in user is owner
+    if ($listing->user_id != auth()->id()) {
+        abort(403, 'Unauthorized Action');
+    }
+
+    // Delete the listing
+    $listing->delete();
+    return redirect('/')->with('message', 'Listing deleted successfully');
+}
 
     // Manage Listings
     public function manage() {

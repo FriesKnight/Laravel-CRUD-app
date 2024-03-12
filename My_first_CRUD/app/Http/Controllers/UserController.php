@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -49,7 +50,6 @@ class UserController extends Controller
         return view('users.login');
     }
 
-    // Authenticate User
     public function authenticate(Request $request) {
         $formFields = $request->validate([
             'email' => ['required', 'email'],
@@ -58,6 +58,11 @@ class UserController extends Controller
 
         if(auth()->attempt($formFields)) {
             $request->session()->regenerate();
+
+            // Check if the authenticated user is an admin
+            if (Auth::user()->role === 'admin') {
+                return redirect()->route('admin.listings')->with('message', 'You are now logged in as admin!');
+            }
 
             return redirect('/')->with('message', 'You are now logged in!');
         }

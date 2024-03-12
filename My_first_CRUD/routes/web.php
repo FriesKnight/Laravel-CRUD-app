@@ -64,3 +64,8 @@ Route::get('/login', [UserController::class, 'login'])->name('login')->middlewar
 
 // Log In User
 Route::post('/users/authenticate', [UserController::class, 'authenticate']);
+
+//admin view
+Route::get('/admin/listings', [App\Http\Controllers\AdminListingController::class, 'index'])
+    ->middleware(['auth', 'admin'])
+    ->name('admin.listings');
