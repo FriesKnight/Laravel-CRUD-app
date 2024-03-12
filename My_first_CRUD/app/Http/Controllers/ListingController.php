@@ -58,11 +58,25 @@ class ListingController extends Controller
     }
 
     // Update Listing Data
-public function update(Request $request, Listing $listing) {
-    // Allow admins to update listings
-    if (auth()->user()->role === 'admin') {
-        // Update the listing
-        $listing->update($request->all());
+    public function update(Request $request, Listing $listing) {
+        // Make sure logged in user is owner
+        if($listing->user_id != auth()->id()) {
+            abort(403, 'Unauthorized Action');
+        }
+        
+        $formFields = $request->validate([
+            'title' => 'required',
+            'location' => 'required',
+            'tags' => 'required',
+            'description' => 'required'
+        ]);
+
+        if($request->hasFile('logo')) {
+            $formFields['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
+        $listing->update($formFields);
+
         return back()->with('message', 'Listing updated successfully!');
     }
 
